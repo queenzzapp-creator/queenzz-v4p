@@ -3,7 +3,6 @@ const CACHE_NAME = 'queenzz-cache-v4';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/index.tsx', // This will be requested by the browser
   '/manifest.json',
   '/icon.svg',
   // Key CDN assets

@@ -54,14 +54,25 @@ const StudyCoach: React.FC<StudyCoachProps> = ({ appData, settings, onExecuteAct
     useEffect(() => {
         const initChat = () => {
             setIsLoading(true);
-            const session = createOmniCoachChatSession(appData, settings);
-            setChatSession(session);
-            setMessages([{
-                id: crypto.randomUUID(),
-                text: '¡Hola! Soy tu asistente de estudio. ¿Qué necesitas hacer? Puedes adjuntar archivos para que los analice.',
-                sender: 'ai'
-            }]);
-            setIsLoading(false);
+            try {
+                const session = createOmniCoachChatSession(appData, settings);
+                setChatSession(session);
+                setMessages([{
+                    id: crypto.randomUUID(),
+                    text: '¡Hola! Soy tu asistente de estudio. ¿Qué necesitas hacer? Puedes adjuntar archivos para que los analice.',
+                    sender: 'ai'
+                }]);
+            } catch (e: any) {
+                console.error('Error iniciando Omni-Coach:', e);
+                setChatSession(null);
+                setMessages([{
+                    id: crypto.randomUUID(),
+                    text: 'El asistente de estudio no está disponible. Revisa la configuración de la API (GEMINI_API_KEY). Puedes seguir usando el resto de la app.',
+                    sender: 'ai'
+                }]);
+            } finally {
+                setIsLoading(false);
+            }
         };
         initChat();
     }, [appData, settings]);

@@ -7,11 +7,16 @@ const API_CALL_DELAY_MS = 200; // 200ms delay between calls (5 calls/sec)
 const MAX_RETRIES = 3;
 
 const getClient = () => {
-    if (!process.env.API_KEY) {
-        throw new Error("La variable de entorno API_KEY no está configurada");
+    // Prefer Vite env var in frontend builds. Fallbacks keep retro-compat.
+    const apiKey = (typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_GEMINI_API_KEY : undefined)
+        || (process as any)?.env?.GEMINI_API_KEY
+        || (process as any)?.env?.API_KEY;
+
+    if (!apiKey) {
+        throw new Error("La variable de entorno VITE_GEMINI_API_KEY no está configurada");
     }
     if (!genAIClient) {
-        genAIClient = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        genAIClient = new GoogleGenAI({ apiKey });
     }
     return genAIClient;
 };
